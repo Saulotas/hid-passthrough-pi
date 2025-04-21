@@ -1,40 +1,54 @@
 #!/bin/bash
+# install_hid_passthrough.sh - Installer for HID Passthrough Pi
+# Author: Saulotas
 
 set -e
 
-echo "🔧 Installing HID Passthrough System..."
+echo "🛠️ HID Passthrough Pi Installer Started..."
 
-# Update system
+# --- Update apt and install required system packages ---
+echo "📦 Installing system packages..."
 sudo apt update
-sudo apt install -y python3 python3-pip python3-hid python3-dbus bluetooth bluez
+sudo apt install -y python3-pip python3-hid python3-dbus bluetooth bluez build-essential libbluetooth-dev git
 
 # --- Fix PyBluez if needed ---
-echo "🔧 Checking and fixing PyBluez installation..."
+echo "🔧 Checking and fixing PyBluez installation if needed..."
 bash /opt/hid-passthrough-pi/scripts/fix_pybluez.sh
 
-# Enable Bluetooth
-sudo systemctl enable bluetooth
-sudo systemctl start bluetooth
+# --- Install required Python packages ---
+echo "📦 Installing Python libraries..."
+pip install --break-system-packages pyyaml
 
-# Create install directory
-sudo mkdir -p /opt/hid-passthrough
-sudo cp -r src /opt/hid-passthrough/
-sudo cp config.yaml /opt/hid-passthrough/
+# --- Create and install systemd services ---
+echo "🔧 Installing systemd services..."
 
-# Install Python requirements
-sudo pip3 install pybluez hid python-systemd PyYAML
+SERVICE_PATH="/etc/systemd/system"
 
-# Setup udev rules for hidraw access
-sudo cp udev/99-hidraw.rules /etc/udev/rules.d/
-sudo udevadm control --reload
-sudo udevadm trigger
-
-# Install systemd services
-sudo cp systemd/*.service /etc/systemd/system/
-sudo systemctl daemon-reload
+# HID Passthrough Service
+sudo cp /opt/hid-passthrough-pi/services/hid_passthrough.service $SERVICE_PATH/
 sudo systemctl enable hid_passthrough.service
-sudo systemctl enable bt_autopair.service
+
+# Bluetooth Auto Pair Service
+sudo cp /opt/hid-passthrough-pi/services/bt_auto_pair.service $SERVICE_PATH/
+sudo systemctl enable bt_auto_pair.service
+
+# Bluetooth LED Status Service
+sudo cp /opt/hid-passthrough-pi/services/bt_led_status.service $SERVICE_PATH/
 sudo systemctl enable bt_led_status.service
 
-echo "✅ Installation complete!"
-echo "💡 Please reboot your Pi now."
+# OTA Updater Service
+sudo cp /opt/hid-passthrough-pi/services/ota_updater.service $SERVICE_PATH/
+sudo systemctl enable ota_updater.service
+
+echo "✅ Services installed and enabled."
+
+# --- Setup directories if needed ---
+echo "📁 Ensuring necessary folders exist..."
+mkdir -p /opt/hid-passthrough-pi/logs
+
+# --- Final steps ---
+echo "🚀 Installation complete!"
+echo "➡️ Reboot your Pi to start services:"
+echo "   sudo reboot"
+
+exit 0
