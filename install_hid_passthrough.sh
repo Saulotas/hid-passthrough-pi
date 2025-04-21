@@ -8,6 +8,10 @@ echo "🔧 Installing HID Passthrough System..."
 sudo apt update
 sudo apt install -y python3 python3-pip python3-hid python3-dbus bluetooth bluez
 
+# --- Fix PyBluez if needed ---
+echo "🔧 Checking and fixing PyBluez installation..."
+bash /opt/hid-passthrough-pi/scripts/fix_pybluez.sh
+
 # Enable Bluetooth
 sudo systemctl enable bluetooth
 sudo systemctl start bluetooth
