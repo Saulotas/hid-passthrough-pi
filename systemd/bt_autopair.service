@@ -1,0 +1,11 @@
+[Unit]
+Description=Bluetooth Auto Pair Service
+After=bluetooth.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/hid-passthrough/src/bt_auto_pair.py
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

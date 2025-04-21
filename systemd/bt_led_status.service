@@ -1,0 +1,11 @@
+[Unit]
+Description=Bluetooth LED Status Service
+After=bluetooth.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/hid-passthrough/src/bt_led_status.py
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

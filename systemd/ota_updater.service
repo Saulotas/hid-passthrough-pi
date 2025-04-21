@@ -1,0 +1,11 @@
+[Unit]
+Description=OTA Updater Service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/hid-passthrough/src/ota_updater.py
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

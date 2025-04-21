@@ -1,0 +1,25 @@
+# HID Passthrough Configuration
+
+# Bluetooth device name visible to the PC/phone
+device_name: "HIDPassthroughPi"
+
+# GPIO pin used for LED (optional, set to -1 to disable)
+led_pin: -1
+
+# Enable or disable Over-The-Air updates
+ota_enabled: true
+
+# URL to check for OTA updates
+ota_repo_url: "https://github.com/Saulotas/hid-passthrough-pi"
+
+# How often to check for OTA updates (hours)
+ota_check_interval: 24
+
+# Enable battery saving features
+battery_saving: true
+
+# Sleep time between HID polls (in seconds, to lower CPU usage)
+hid_poll_interval: 0.003
+
+# Bluetooth pairing mode (auto or manual)
+bt_pairing_mode: "auto"

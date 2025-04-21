@@ -1,0 +1,11 @@
+[Unit]
+Description=HID Passthrough Main Service
+After=bluetooth.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/hid-passthrough/src/hid_passthrough.py
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
